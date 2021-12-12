@@ -1,6 +1,6 @@
 import numpy as np
 
-with open("day12.txt") as f:
+with open("day12tttt.txt") as f:
     raw = f.read()
     lines = [line.strip() for line in raw.strip().split("\n")]
 
@@ -127,4 +127,4 @@ def part2():
     # print(all_paths)
     ...
 
-part2()
+part1()
