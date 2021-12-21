@@ -1,5 +1,6 @@
 from typing import List
-from numpy import Infinity 
+from numpy import Infinity, sqrt 
+from __future__ import annotations
 
 with open("day15t.txt") as f:
     raw = f.read()
@@ -20,6 +21,8 @@ class Node:
     def __repr__(self) -> str:
         return f"R{self.risk}"
 
+    def distance_to(self, node:Node):
+        return sqrt((node.x-self.x)**2 + (node.y-self.y)**2)
 
 def part1():
     risks = [[int(n) for n in l] for l in lines]
@@ -42,6 +45,8 @@ def part1():
                     n.connections.append(nodes[i][d+j])
 
     goal = nodes[-1][-1]
+    start = nodes[0][0]
 
+    
     
 part1()
