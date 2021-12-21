@@ -142,6 +142,77 @@ def part2():
 
     while len(queue)>0:
         current = queue.pop(0)
+        to_explore = current.connections
+        
+        for being_explored in to_explore:
+            potential_new_distance = current.distance+being_explored.risk
+
+            if potential_new_distance<being_explored.distance:
+                being_explored.via = current
+                being_explored.distance = potential_new_distance
+                being_explored.heuristic = being_explored.distance+being_explored.physical_distance_to(goal)
+
+                queue.append(being_explored)
+
+        queue.sort()
+        print(len(queue))
+
+    # get path 
+    path = []
+
+    current_via = goal
+    while current_via.via is not None:
+        path.append(current_via)
+        current_via = current_via.via
+
+    print(sum(path))
+
+def part2optimised():
+    def wrap_around(x):
+        return x%9+((x%9)==0)*9
+        
+    partial_risks = np.array([[int(n) for n in l] for l in lines])
+    risks_column = partial_risks.copy()
+
+    for i in range(4):
+        to_be_stacked = partial_risks+i+1
+        to_be_stacked = wrap_around(to_be_stacked)
+
+        risks_column = np.hstack((risks_column, to_be_stacked))
+    
+    risks = risks_column.copy()
+
+    for i in range(4):
+        to_be_stacked = risks_column+i+1
+        to_be_stacked = wrap_around(to_be_stacked)
+
+        risks = np.vstack((risks, to_be_stacked))
+
+    nodes:List[List[Node]]=[]
+    for i, l in enumerate(risks):
+        ln = []
+        for j, r in enumerate(l):
+            ln.append(Node(r, i, j))
+        nodes.append(ln)
+
+    for i, l in enumerate(nodes):
+        for j, n in  enumerate(l):
+            for d in [-1, 1]:
+                if d+i>=0 and d+i<len(nodes):
+                    n.connections.append(nodes[d+i][j])
+                if d+j>=0 and d+j<len(nodes):
+                    n.connections.append(nodes[i][d+j])
+
+    goal = nodes[-1][-1]
+    start = nodes[0][0]
+
+    start.distance = 0
+    start.heuristic = start.physical_distance_to(goal)
+
+    queue = [start]
+
+    while len(queue)>0:
+        current = queue.pop(0)
         current.explored = True
         to_explore = current.connections
         
@@ -154,10 +225,16 @@ def part2():
                 being_explored.heuristic = being_explored.distance+being_explored.physical_distance_to(goal)
 
                 if not being_explored.explored:
-                    queue.append(being_explored)
-                        
+                    found = False
+                    for i, q in enumerate(queue):
+                        if q > being_explored.heuristic:
+                            found=True
+                            queue.insert(i, being_explored)
+                            break
 
-        queue.sort()
+                    if not found:
+                        queue.append(being_explored)
+                        
         print(len(queue))
 
     # get path 
@@ -167,7 +244,6 @@ def part2():
     while current_via.via is not None:
         path.append(current_via)
         current_via = current_via.via
-    
 
     print(sum(path))
     
