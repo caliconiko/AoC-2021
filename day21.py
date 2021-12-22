@@ -1,7 +1,9 @@
 import numpy as np
 from collections import defaultdict
 
-with open("day21t.txt") as f:
+from time import time
+
+with open("day21.txt") as f:
     raw = f.read()
     lines = raw.splitlines()
 
@@ -59,7 +61,7 @@ def part2():
 
         if np.any(scores>=21):
             wins[index]+=m
-            print(wins)
+            # print(wins)
             return
 
         for k in multiples.keys():
@@ -68,4 +70,9 @@ def part2():
     for k in multiples.keys():
         split(k, 0, player_positions.copy(), player_scores.copy(), multiples[k])
     print(wins)
+
+    print(np.max(wins))
+
+t1=time()
 part2()
+print(time()-t1)
