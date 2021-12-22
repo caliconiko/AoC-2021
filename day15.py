@@ -4,7 +4,7 @@ from numpy import Infinity, sqrt
 from functools import total_ordering
 import numpy as np
 
-with open("day15.txt") as f:
+with open("day15t.txt") as f:
     raw = f.read()
     lines = raw.splitlines()
 
@@ -155,7 +155,7 @@ def part2():
                 queue.append(being_explored)
 
         queue.sort()
-        print(len(queue))
+        # print(len(queue))
 
     # get path 
     path = []
@@ -235,7 +235,7 @@ def part2optimised():
                     if not found:
                         queue.append(being_explored)
                         
-        print(len(queue))
+        # print(len(queue))
 
     # get path 
     path = []
@@ -247,4 +247,4 @@ def part2optimised():
 
     print(sum(path))
     
-part2()
+part2optimised()
